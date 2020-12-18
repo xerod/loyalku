@@ -25,36 +25,57 @@
         />
       </c-input-group>
 
-      <c-list mt="4">
+      <c-list mt="4" spacing="2">
         <c-list-item>
-          <c-pseudo-box
-            display="flex"
-            align-items="center"
-            color="gray.600"
-            rounded="md"
-            p="3"
-            :_hover="{ bg: 'gray.100', cursor: 'pointer' }"
-          >
-            <c-icon name="chart-pie-md" mr="3" size="22px" color="gray.400" />
-            <c-text font-weight="medium" font-size="sm" justify="center">
-              Dashboard
-            </c-text>
-          </c-pseudo-box>
+          <nuxt-link to="/dashboard">
+            <c-pseudo-box
+              role="group"
+              display="flex"
+              align-items="center"
+              rounded="lg"
+              px="4"
+              py="2"
+              :color="$route.name == 'dashboard' ? 'gray.700' : 'gray.500'"
+              :bg="$route.name == 'dashboard' ? 'gray.100' : 'transparent'"
+              :_hover="{ cursor: 'pointer', color: 'gray.700' }"
+            >
+              <c-pseudo-box
+                d="flex"
+                :color="$route.name == 'dashboard' ? 'gray.500' : 'gray.400'"
+                :_groupHover="{ color: 'gray.500' }"
+              >
+                <c-icon name="chart-pie-md" mr="3" size="24px" />
+              </c-pseudo-box>
+              <c-text font-weight="semibold" font-size="sm" justify="center">
+                Dashboard
+              </c-text>
+            </c-pseudo-box>
+          </nuxt-link>
         </c-list-item>
         <c-list-item>
-          <c-pseudo-box
-            display="flex"
-            align-items="center"
-            color="gray.600"
-            rounded="md"
-            p="3"
-            :_hover="{ bg: 'gray.100', cursor: 'pointer' }"
-          >
-            <c-icon name="user-group-md" mr="3" size="22px" color="gray.400" />
-            <c-text font-weight="medium" font-size="sm" justify="center">
-              Customers
-            </c-text>
-          </c-pseudo-box>
+          <nuxt-link to="customers">
+            <c-pseudo-box
+              role="group"
+              display="flex"
+              align-items="center"
+              rounded="lg"
+              px="4"
+              py="2"
+              :color="$route.name == 'customers' ? 'gray.700' : 'gray.500'"
+              :bg="$route.name == 'customers' ? 'gray.100' : 'transparent'"
+              :_hover="{ cursor: 'pointer', color: 'gray.700' }"
+            >
+              <c-pseudo-box
+                d="flex"
+                :color="$route.name == 'customers' ? 'gray.500' : 'gray.400'"
+                :_groupHover="{ color: 'gray.500' }"
+              >
+                <c-icon name="user-group-md" size="24px" mr="3" />
+              </c-pseudo-box>
+
+              <c-text font-weight="semibold" font-size="sm"> Customers </c-text>
+            </c-pseudo-box>
+          </nuxt-link>
         </c-list-item>
       </c-list>
     </c-flex>
