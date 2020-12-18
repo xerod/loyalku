@@ -4,10 +4,7 @@
       <CColorModeProvider>
         <CBox font-family="body" as="main">
           <CReset />
-          <c-flex height="100vh" width="100%" bg="gray.100">
-            <Navbar />
-            <Nuxt />
-          </c-flex>
+          <Nuxt />
         </CBox>
       </CColorModeProvider>
     </CThemeProvider>
@@ -21,8 +18,6 @@ import {
   CBox,
 } from '@chakra-ui/vue'
 
-import Navbar from '@/components/Navbar.vue'
-
 export default {
   name: 'App',
   components: {
@@ -30,7 +25,6 @@ export default {
     CColorModeProvider,
     CReset,
     CBox,
-    Navbar,
   },
 }
 </script>
