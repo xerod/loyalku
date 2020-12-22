@@ -16,7 +16,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: ['~/plugins/axios', { src: '~/plugins/vuex-persist', ssr: false }],
+  plugins: [{ src: '~/plugins/vuex-persist', ssr: false }],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
@@ -35,6 +35,8 @@ export default {
     '@nuxtjs/emotion',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    // https://auth.nuxtjs.org
+    '@nuxtjs/auth-next',
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
@@ -42,6 +44,10 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
+
+  router: {
+    middleware: ['auth'],
+  },
 
   chakra: {
     config: {
@@ -51,6 +57,24 @@ export default {
       extend: {
         ...heroicons,
       },
+    },
+  },
+
+  auth: {
+    plugins: ['~/plugins/auth.js'],
+    strategies: {
+      moka: {
+        clientId:
+          '7a49f9caa9daeeec623470b760a9d200caa065248be4a0be2722476f558bcb2f',
+        clientSecret:
+          '77fe02e532b7c4c035de97f83ab320a5725f6ce97d336244228f8366dc89fbb5',
+        redirectUri: 'http://localhost:3000/auth/callback',
+        logoutRedirectUri: '/',
+      },
+    },
+    redirect: {
+      login: '/',
+      callback: '/auth/callback',
     },
   },
 }

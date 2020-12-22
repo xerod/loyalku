@@ -12,6 +12,7 @@
   "dependencies": {
     "@chakra-ui/nuxt": "^0.1.0",
     "@nuxt/typescript-runtime": "^2.0.0",
+    "@nuxtjs/auth-next": "xerod/auth-module",
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/emotion": "^0.0.1",
     "core-js": "^3.6.5",
