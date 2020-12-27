@@ -37,6 +37,8 @@ export default {
     '@nuxtjs/axios',
     // https://auth.nuxtjs.org
     '@nuxtjs/auth-next',
+    // https://github.com/nuxt-community/dayjs-module
+    '@nuxtjs/dayjs',
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
@@ -74,7 +76,17 @@ export default {
     },
     redirect: {
       login: '/',
+      logout: '/',
       callback: '/auth/callback',
+      home: '/dashboard',
     },
+  },
+  dayjs: {
+    locales: ['en', 'id'],
+    defaultLocale: 'id',
+    defaultTimeZone: 'Asia/Jakarta',
+    plugins: [
+      'relativeTime', // import 'dayjs/plugin/relativeTime'
+    ],
   },
 }
