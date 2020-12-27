@@ -4,7 +4,7 @@
       <CColorModeProvider>
         <CBox font-family="body" as="main">
           <CReset />
-          <c-flex height="100vh" width="100%" bg="gray.100">
+          <c-flex v-chakra min-height="100vh" width="100%" bg="gray.100">
             <Navbar />
             <Nuxt />
           </c-flex>
