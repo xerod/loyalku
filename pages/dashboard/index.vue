@@ -1,27 +1,6 @@
 <template>
-  <c-flex direction="column" width="100%" align="center">
-    <c-flex
-      width="90%"
-      direction="row"
-      align="center"
-      justify="space-between"
-      my="2"
-    >
-      <c-text fontWeight="semibold" color="gray.600" fontSize="lg">
-        Home
-      </c-text>
-      <c-button-group>
-        <c-button
-          right-icon="arrow-forward"
-          variant-color="red"
-          size="sm"
-          variant="outline"
-        >
-          Log out
-        </c-button>
-      </c-button-group>
-    </c-flex>
-    <c-divider width="90%" border-color="gray.300"></c-divider>
+  <c-flex direction="column" width="80%" align="center">
+    <SecondaryNav name="Home" />
     <c-text width="90%" fontWeight="semibold" color="gray.600" mb="2" mt="4">
       Overview
     </c-text>
@@ -37,8 +16,8 @@
           >CUSTOMER RETENTION RATE</c-text
         >
         <c-flex align="flex-end">
-          <c-text fontSize="4xl" fontWeight="bold" color="gray.800">89%</c-text>
-          <c-text color="green.500" ml="2">+1.57%</c-text>
+          <c-text fontSize="4xl" fontWeight="bold" color="gray.800">0%</c-text>
+          <c-text color="green.500" ml="2">+0%</c-text>
         </c-flex>
       </c-box>
       <c-box width="100%" bg="white" rounded="md" box-shadow="sm" p="4">
@@ -46,8 +25,8 @@
           >REPURCHASING RATE</c-text
         >
         <c-flex align="flex-end">
-          <c-text fontSize="4xl" fontWeight="bold" color="gray.800">73%</c-text>
-          <c-text color="green.500" ml="2">+1.57%</c-text>
+          <c-text fontSize="4xl" fontWeight="bold" color="gray.800">0%</c-text>
+          <c-text color="green.500" ml="2">+0%</c-text>
         </c-flex>
       </c-box>
       <c-box width="100%" bg="white" rounded="md" box-shadow="sm" p="4">
@@ -55,8 +34,8 @@
           >MULTI-PRODUCT PURCHASE RATE</c-text
         >
         <c-flex align="flex-end">
-          <c-text fontSize="4xl" fontWeight="bold" color="gray.800">40</c-text>
-          <c-text color="green.500" ml="2">+1.57%</c-text>
+          <c-text fontSize="4xl" fontWeight="bold" color="gray.800">0%</c-text>
+          <c-text color="green.500" ml="2">+0%</c-text>
         </c-flex>
       </c-box>
     </c-grid>
@@ -72,6 +51,7 @@
 </template>
 
 <script>
+import SecondaryNav from '@/components/SecondaryNav'
 import Transactions from '@/components/Transactions.vue'
 
 export default {
@@ -82,10 +62,11 @@ export default {
   },
   components: {
     Transactions,
+    SecondaryNav,
   },
-  mounted() {
+  created() {
     this.$store.dispatch('transactions/getLatestTransaction')
-    this.$store.dispatch('profile/getUserData')
+    // this.$store.dispatch('profile/getUserData')
   },
   computed: {
     authCode() {
