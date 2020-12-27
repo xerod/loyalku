@@ -86,6 +86,8 @@ export default {
     defaultLocale: 'id',
     defaultTimeZone: 'Asia/Jakarta',
     plugins: [
+      'utc',
+      'timezone',
       'relativeTime', // import 'dayjs/plugin/relativeTime'
     ],
   },
