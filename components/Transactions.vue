@@ -1,5 +1,5 @@
 <template>
-  <c-box width="90%" justify="center">
+  <c-box width="90%" mb="8">
     <c-flex v-if="loading" width="100%" justify="center" mt="4">
       <c-spinner
         thickness="5px"
@@ -11,13 +11,13 @@
     </c-flex>
     <table
       v-chakra
-      v-else
+      v-else-if="latest_transactions.length"
       rounded="md"
       width="100%"
       bg="white"
       font-weight="medium"
       font-size="sm"
-      color="gray.500"
+      color="gray.400"
       box-shadow="sm"
       overflow="hidden"
     >
@@ -35,8 +35,8 @@
         border-color="gray.100"
       >
         <td>{{ transaction.payment_no }}</td>
-        <td>{{ transaction.name }}</td>
-        <td v-chakra display="flex" font-weight="semibold">
+        <td v-chakra width="50%" color="gray.500">{{ transaction.name }}</td>
+        <td v-chakra display="flex" font-weight="semibold" color="gray.600">
           <c-text v-chakra mr="1" font-weight="medium" color="gray.400">
             Rp
           </c-text>
@@ -50,6 +50,21 @@
         <td>{{ transaction.transaction_time }}</td>
       </tr>
     </table>
+    <c-flex
+      v-else
+      direction="column"
+      w="100%"
+      py="10"
+      bg="white"
+      justify-content="center"
+      text-align="center"
+      rounded="md"
+      box-shadow="sm"
+    >
+      <c-text mt="4" font-size="lg" font-weight="semibold" color="gray.500">
+        Oops.. there's no transaction for today :(
+      </c-text>
+    </c-flex>
   </c-box>
 </template>
 

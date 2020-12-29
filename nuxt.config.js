@@ -16,7 +16,7 @@ export default {
   css: [],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
-  plugins: [{ src: '~/plugins/vuex-persist', ssr: false }],
+  plugins: ['~/plugins/axios'],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
@@ -88,6 +88,7 @@ export default {
     plugins: [
       'utc',
       'timezone',
+      'duration',
       'relativeTime', // import 'dayjs/plugin/relativeTime'
     ],
   },

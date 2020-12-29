@@ -77,13 +77,13 @@ export default {
       showPassword: false,
     }
   },
-  mounted() {
-    if (this.$auth.loggedIn) {
-      this.$router.push({
-        path: '/dashboard',
-      })
-    }
-  },
+  // mounted() {
+  //   if (this.$auth.loggedIn) {
+  //     this.$router.push({
+  //       path: '/dashboard',
+  //     })
+  //   }
+  // },
   computed: {
     colorMode() {
       return this.$chakraColorMode()

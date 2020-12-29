@@ -13,10 +13,20 @@ export const mutations = {
     state.transaction.next_url = payload.next_url
     state.transaction.completed = payload.completed
   },
+  ADD_PAYMENTS(state, payload) {
+    state.transaction.payments = state.transaction.payments.concat(payload)
+  },
+  SET_COMPLETED(state, payload) {
+    state.transaction.completed = payload
+  },
+  SET_NEXT_URL(state, payload) {
+    state.transaction.next_url = payload
+  },
   REMOVE_TRANSACTION(state) {
     state.transaction = []
   },
   SET_LATEST_TRANSACTION(state, payload) {
+    console.log('Latest Transaction Payload: ' + payload.payments)
     state.latest_transaction = payload.payments
   },
   REMOVE_LATEST_TRANSACTION(state) {
@@ -40,14 +50,36 @@ export const getters = {
 }
 
 export const actions = {
-  // GET ALL TRANSACTION
+  // GET CUSTOMER RETENTION RATE
   //...
+
+  // GET REPURCHASING RATE
+  //...
+
+  // GET MULTI-PRODUCT PURCHASE RATE
+  //
+  // if (!!state.transaction.payments)
+  //  let value = 0
+  //  for loop state.transaction.payments
+  //    if(payments.length !== 1){
+  //      state.transaction.payments.splice(index, index)
+  //    } else {
+  //      value++
+  //    }
+  // else {
+  //  return 0
+  // }
 
   // GET LATEST TRANSACTION
   async getLatestTransaction({ commit }) {
-    const payload = await this.$axios.$get(
-      'https://api.mokapos.com/v2/outlets/247714/reports/get_latest_transactions'
-    )
-    commit('SET_LATEST_TRANSACTION', payload.data)
+    const outletId = this.$auth.user.outlet_ids[0]
+
+    await this.$axios
+      .$get(
+        `https://api.mokapos.com/v2/outlets/${outletId}/reports/get_latest_transactions`
+      )
+      .then((res) => {
+        commit('SET_LATEST_TRANSACTION', res.data)
+      })
   },
 }

@@ -66,7 +66,51 @@ export default {
   },
   created() {
     this.$store.dispatch('transactions/getLatestTransaction')
-    // this.$store.dispatch('profile/getUserData')
+  },
+  mounted() {
+    const now = this.$dayjs()
+    const sixMonthsFromNow = this.$dayjs.duration({
+      weeks: 3,
+      months: 5,
+    })
+    const defaultQuery = {
+      since: now.subtract(sixMonthsFromNow).unix(),
+      until: now.unix(),
+    }
+    const outletId = this.$store.state.auth.user.outlet_ids[0]
+
+    const defaultEndpoint = `https://api.mokapos.com/v2/outlets/${outletId}/reports/get_latest_transactions`
+    const actualEndpoint =
+      defaultEndpoint +
+      `?since=${defaultQuery.since}&until=${defaultQuery.until}`
+
+    const getTransaction = async (url) => {
+      var apiResults = await this.$axios.$get(url).then((res) => {
+        return res.data
+      })
+      this.$store.commit('transactions/ADD_PAYMENTS', apiResults.payments)
+      return apiResults
+    }
+
+    const getEntireTransaction = async (url) => {
+      const results = await getTransaction(url)
+      const next_url = results.next_url
+      const completed_status = results.completed
+
+      if (completed_status === false) {
+        return await getEntireTransaction(next_url)
+      } else {
+        return completed_status
+      }
+    }
+
+    ;(async () => {
+      const payments = this.$store.state.transactions.transaction.payments
+      if (Object.keys(payments).length === 0) {
+        const entireList = await getEntireTransaction(actualEndpoint)
+        console.log('Success retrieving entire transaction!')
+      }
+    })()
   },
   computed: {
     authCode() {
