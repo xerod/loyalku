@@ -8,26 +8,32 @@
       <c-grid template-columns="repeat(3, 1fr)" gap="4" direction="row" mb="8">
         <c-box width="100%" bg="white" rounded="md" box-shadow="sm" p="4">
           <c-text fontWeight="semibold" fontSize="xs" color="gray.500"
-            >CUSTOMERS BEFORE</c-text
+            >PELANGGAN BULAN LALU</c-text
           >
           <c-flex align="flex-end">
-            <c-text fontSize="4xl" fontWeight="bold" color="gray.800">0</c-text>
+            <c-text fontSize="4xl" fontWeight="bold" color="gray.800">{{
+              getCustomersAtBeginning
+            }}</c-text>
           </c-flex>
         </c-box>
         <c-box width="100%" bg="white" rounded="md" box-shadow="sm" p="4">
           <c-text fontWeight="semibold" fontSize="xs" color="gray.500"
-            >CUSTOMERS GAINED</c-text
+            >PELANGGAN BULAN INI</c-text
           >
           <c-flex align="flex-end">
-            <c-text fontSize="4xl" fontWeight="bold" color="gray.800">0</c-text>
+            <c-text fontSize="4xl" fontWeight="bold" color="gray.800">{{
+              getCustomersGained
+            }}</c-text>
           </c-flex>
         </c-box>
         <c-box width="100%" bg="white" rounded="md" box-shadow="sm" p="4">
           <c-text fontWeight="semibold" fontSize="xs" color="gray.500"
-            >CUSTOMERS AT THE END</c-text
+            >PELANGGAN 6 BULAN TERAKHIR</c-text
           >
           <c-flex align="flex-end">
-            <c-text fontSize="4xl" fontWeight="bold" color="gray.800">0</c-text>
+            <c-text fontSize="4xl" fontWeight="bold" color="gray.800">{{
+              getCustomersAtTheEnd
+            }}</c-text>
           </c-flex>
         </c-box>
       </c-grid>
@@ -67,19 +73,20 @@
                 text-align="right"
                 py="8"
               >
-                0
+                {{ getNewCustomersGrowth }}
               </td>
             </tr>
             <tr>
               <th v-chakra font-weight="medium">
-                Jumlah Pelanggan Pergi:
+                Jumlah Pelanggan Beralih:
                 <c-text
                   color="gray.400"
                   font-weight="normal"
                   font-size="sm"
                   line-height="1.25"
                   mt="1"
-                  >Pelanggan yang hilang selama periode 6 bulan terakhir</c-text
+                  >Jumlah kekurangan pelanggan dari rata-rata 6 bulan
+                  terakhir</c-text
                 >
               </th>
               <td
@@ -89,12 +96,12 @@
                 text-align="right"
                 py="8"
               >
-                0
+                {{ getNumberOfLostCustomers }}
               </td>
             </tr>
             <tr>
               <th v-chakra font-weight="medium">
-                Tingkat Peralihan (%):
+                Tingkat Peralihan:
                 <c-text
                   color="gray.400"
                   font-weight="normal"
@@ -111,19 +118,20 @@
                 text-align="right"
                 py="8"
               >
-                0
+                {{ getAttritionRate }}%
               </td>
             </tr>
             <tr v-chakra bg="gray.50">
               <th v-chakra font-weight="bold" color="gray.600">
-                Tingkat Retensi (%):
+                Tingkat Retensi:
                 <c-text
                   color="gray.400"
                   font-weight="normal"
                   font-size="sm"
                   line-height="1.25"
                   mt="1"
-                  >Pelanggan yang menetap dibagi keseluruhan pelanggan</c-text
+                  >Jumlah pelanggan bulan ini dibagi keseluruhan
+                  pelanggan</c-text
                 >
               </th>
               <td
@@ -133,7 +141,7 @@
                 text-align="right"
                 py="8"
               >
-                0
+                {{ getRetentionRate }}%
               </td>
             </tr>
           </table>
@@ -171,7 +179,34 @@
                 text-align="right"
                 py="8"
               >
-                0
+                {{ formatter.format(getAvarageSalesPerCustomer) }}
+              </td>
+            </tr>
+            <tr
+              v-chakra
+              bg="gray.50"
+              border-bottom="1px"
+              border-color="gray.200"
+            >
+              <th v-chakra font-weight="bold" color="gray.600">
+                Lost revenue
+                <c-text
+                  color="gray.400"
+                  font-weight="normal"
+                  font-size="sm"
+                  line-height="1.25"
+                  mt="1"
+                  >Nilai pendapatan yang hilang selama 6 bulan terakhir</c-text
+                >
+              </th>
+              <td
+                v-chakra
+                width="40%"
+                border-color="gray.100"
+                text-align="right"
+                py="8"
+              >
+                {{ formatter.format(getLostRevenue) }}
               </td>
             </tr>
             <tr>
@@ -193,12 +228,25 @@
                 border-color="gray.100"
                 text-align="right"
                 py="8"
+                pl="12"
               >
-                0
+                <c-number-input
+                  v-model="operatingIncome"
+                  :max="100"
+                  :min="0"
+                  :step="0.1"
+                  precision="2"
+                >
+                  <c-number-input-field />
+                  <c-number-input-stepper>
+                    <c-number-increment-stepper />
+                    <c-number-decrement-stepper />
+                  </c-number-input-stepper>
+                </c-number-input>
               </td>
             </tr>
-            <tr>
-              <th v-chakra font-weight="medium" color="gray.600">
+            <tr v-chakra bg="gray.50">
+              <th v-chakra font-weight="bold" color="gray.600">
                 Lost Operating Income:
                 <c-text
                   color="gray.400"
@@ -217,29 +265,7 @@
                 text-align="right"
                 py="8"
               >
-                0
-              </td>
-            </tr>
-            <tr v-chakra bg="gray.50">
-              <th v-chakra font-weight="bold" color="gray.600">
-                Lost revenue
-                <c-text
-                  color="gray.400"
-                  font-weight="normal"
-                  font-size="sm"
-                  line-height="1.25"
-                  mt="1"
-                  >Nilai pendapatan yang hilang selama 6 bulan terakhir</c-text
-                >
-              </th>
-              <td
-                v-chakra
-                width="40%"
-                border-color="gray.100"
-                text-align="right"
-                py="8"
-              >
-                0
+                {{ formatter.format(getLostOperatingIncome) }}
               </td>
             </tr>
           </table>
@@ -250,11 +276,92 @@
 </template>
 
 <script>
+import Transaction from '@/models/Transaction'
 import SecondaryNav from '@/components/SecondaryNav'
 
 export default {
+  data() {
+    return {
+      isFetchingData: true,
+      operatingIncome: 0,
+    }
+  },
   components: {
     SecondaryNav,
+  },
+  computed: {
+    getCustomersAtBeginning() {
+      return Transaction.query()
+        .where(
+          'created_at',
+          (value) =>
+            this.$dayjs(value) < this.$dayjs().subtract(1, 'month') &&
+            this.$dayjs(value) > this.$dayjs().subtract(2, 'month')
+        )
+        .get().length
+    },
+    getCustomersGained() {
+      return Transaction.query()
+        .where(
+          'created_at',
+          (value) => this.$dayjs(value) > this.$dayjs().subtract(1, 'month')
+        )
+        .get().length
+    },
+    getCustomersAtTheEnd() {
+      return Transaction.all().length
+    },
+    getNewCustomersGrowth() {
+      return this.getCustomersGained
+    },
+    getNumberOfLostCustomers() {
+      const avarageCustomersRate =
+        (this.getCustomersAtTheEnd - this.getCustomersGained) / 5
+      const numberOfLOstCustomers =
+        this.getCustomersGained - avarageCustomersRate
+      return numberOfLOstCustomers.toFixed(0)
+    },
+    getAttritionRate() {
+      const avarageCustomersRate =
+        (this.getCustomersAtTheEnd - this.getCustomersGained) / 5
+      const attritionRate =
+        (this.getNumberOfLostCustomers / avarageCustomersRate) * 100
+      return attritionRate.toFixed(2)
+    },
+    getRetentionRate() {
+      const retentionRate = 100 - this.getAttritionRate
+      this.$store.commit(
+        'transactions/SET_CUSTOMER_RETENTION_RATE',
+        retentionRate
+      )
+      return retentionRate.toFixed(2)
+    },
+    getAvarageSalesPerCustomer() {
+      const allTransactionValue = Transaction.query().sum('total_collected')
+      const avarage = allTransactionValue / this.getCustomersAtTheEnd
+
+      return avarage
+    },
+    getLostOperatingIncome() {
+      const operatingIncomePerCustomer =
+        (this.getAvarageSalesPerCustomer * this.operatingIncome) / 100
+      const lostOperatingIncome =
+        operatingIncomePerCustomer * this.getNumberOfLostCustomers
+      return lostOperatingIncome
+    },
+    getLostRevenue() {
+      return this.getAvarageSalesPerCustomer * this.getNumberOfLostCustomers
+    },
+    formatter() {
+      const value = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0,
+        currencyDisplay: 'symbol',
+      })
+
+      return value
+    },
   },
 }
 </script>

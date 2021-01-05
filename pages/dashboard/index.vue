@@ -1,6 +1,18 @@
 <template>
   <c-flex direction="column" width="80%" align="center">
     <SecondaryNav name="Home" />
+    <c-alert
+      v-if="!isTransactionContainCustomer"
+      width="90%"
+      margin-top="4"
+      status="error"
+      variant="solid"
+    >
+      <c-alert-icon />
+      No customers were found in your transaction. For this reason, some
+      analytics will either not work or provide NaN values instead. You can read
+      more about how to fix this here
+    </c-alert>
     <c-text width="90%" fontWeight="semibold" color="gray.600" mb="2" mt="4">
       Overview
     </c-text>
@@ -16,7 +28,9 @@
           >CUSTOMER RETENTION RATE</c-text
         >
         <c-flex align="flex-end">
-          <c-text fontSize="4xl" fontWeight="bold" color="gray.800">0%</c-text>
+          <c-text fontSize="4xl" fontWeight="bold" color="gray.800">{{
+            getCustomerRetentionRate
+          }}</c-text>
           <c-text color="green.500" ml="2">+0%</c-text>
         </c-flex>
       </c-box>
@@ -25,7 +39,9 @@
           >REPURCHASING RATE</c-text
         >
         <c-flex align="flex-end">
-          <c-text fontSize="4xl" fontWeight="bold" color="gray.800">0%</c-text>
+          <c-text fontSize="4xl" fontWeight="bold" color="gray.800"
+            >{{ getRepurchasingRate }}%</c-text
+          >
           <c-text color="green.500" ml="2">+0%</c-text>
         </c-flex>
       </c-box>
@@ -34,7 +50,9 @@
           >MULTI-PRODUCT PURCHASE RATE</c-text
         >
         <c-flex align="flex-end">
-          <c-text fontSize="4xl" fontWeight="bold" color="gray.800">0%</c-text>
+          <c-text fontSize="4xl" fontWeight="bold" color="gray.800">
+            {{ getMultiProductPurchaseRate }}%
+          </c-text>
           <c-text color="green.500" ml="2">+0%</c-text>
         </c-flex>
       </c-box>
@@ -51,12 +69,18 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
+import Transaction from '@/models/Transaction'
+import Customer from '@/models/Customer'
+
 import SecondaryNav from '@/components/SecondaryNav'
 import Transactions from '@/components/Transactions.vue'
 
 export default {
   data() {
     return {
+      isFetchingTransaction: true,
       selected: 1,
     }
   },
@@ -67,14 +91,20 @@ export default {
   created() {
     this.$store.dispatch('transactions/getLatestTransaction')
   },
-  mounted() {
+  async mounted() {
     const now = this.$dayjs()
     const sixMonthsFromNow = this.$dayjs.duration({
       weeks: 3,
       months: 5,
     })
+    // const fromBeginning = await this.$axios
+    //   .$get('https://api.mokapos.com/v1/businesses')
+    //   .then((res) => {
+    //     return this.$dayjs(res.data.created_at)
+    //   })
     const defaultQuery = {
       since: now.subtract(sixMonthsFromNow).unix(),
+      // since: fromBeginning,
       until: now.unix(),
     }
     const outletId = this.$store.state.auth.user.outlet_ids[0]
@@ -85,37 +115,62 @@ export default {
       `?since=${defaultQuery.since}&until=${defaultQuery.until}`
 
     const getTransaction = async (url) => {
-      var apiResults = await this.$axios.$get(url).then((res) => {
+      var results = await this.$axios.$get(url).then((res) => {
         return res.data
       })
-      this.$store.commit('transactions/ADD_PAYMENTS', apiResults.payments)
-      return apiResults
-    }
 
-    const getEntireTransaction = async (url) => {
-      const results = await getTransaction(url)
-      const next_url = results.next_url
-      const completed_status = results.completed
+      Transaction.insert({
+        data: results.payments,
+      })
 
-      if (completed_status === false) {
-        return await getEntireTransaction(next_url)
+      if (results.completed === false) {
+        return await getTransaction(results.next_url)
       } else {
-        return completed_status
+        return results.completed
       }
     }
 
     ;(async () => {
-      const payments = this.$store.state.transactions.transaction.payments
-      if (Object.keys(payments).length === 0) {
-        const entireList = await getEntireTransaction(actualEndpoint)
-        console.log('Success retrieving entire transaction!')
+      if (Transaction.all().length == 0) {
+        const entireList = await getTransaction(actualEndpoint)
       }
+      this.isFetchingTransaction = false
     })()
   },
   computed: {
-    authCode() {
-      return this.$store.state.auth.code
+    getRepurchasingRate() {
+      const allCustomerWithTransactions = Customer.query()
+        .with('transactions')
+        .get().length
+      const allCustomers = Customer.all().length
+
+      const ratio = (allCustomerWithTransactions / allCustomers) * 100
+      return ratio
     },
+    getCustomerRetentionRate() {
+      return this.customer_retention_rate
+    },
+    getMultiProductPurchaseRate() {
+      const multiProductPurchase = Transaction.query()
+        .where('checkouts', (value) => value.length > 1)
+        .get().length
+
+      const allTransaction = Transaction.all().length
+      const ratio = (multiProductPurchase / allTransaction) * 100
+
+      return ratio.toFixed(0)
+    },
+    isTransactionContainCustomer() {
+      const transactionContainCustomer = Transaction.query()
+        .where('customer_id', (value) => value !== null)
+        .get().length
+
+      return !!transactionContainCustomer
+    },
+    ...mapGetters('transactions', {
+      latest_transactions: 'GET_LATEST_TRANSACTION',
+      customer_retention_rate: 'GET_CUSTOMER_RETENTION_RATE',
+    }),
   },
   methods: {
     select(i) {
