@@ -1,4 +1,4 @@
-import heroicons from './heroicons.js'
+import heroicons from './static/heroicons.js'
 
 export default {
   // Global page headers (https://go.nuxtjs.dev/config-head)
