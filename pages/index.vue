@@ -30,14 +30,43 @@
           p="8"
         >
           <c-heading as="h1" size="xl" text-align="center" mb="4"
-            >We can't identify you 😞
+            >Sorry, we can't identify your access 😞
           </c-heading>
-          <c-text mb="10"
-            >Untuk mengakses dashboard mu, kamu perlu mengatur akses via
-            backoffice MOKA. Apabila ini pertama kali kamu menggunakan Loyalku,
-            silahkan sambungkan
+
+          <c-text mb="6" text-align="left" color="gray.700">
+            Jika ini pertama kalinya kamu menggunakan Loyalku, silahkan
+            sambungkan aplikasi Loyalku dengan MOKA.
           </c-text>
 
+          <c-list spacing="3" text-align="left" mb="10" color="gray.500">
+            <c-list-item display="flex" align-items="center">
+              <c-list-icon icon="check-circle" color="gray.500" mr="4" />
+              <c-text>
+                Loyalku hanya membaca data transaksi dan data pelanggan pada
+                MOKA
+              </c-text>
+            </c-list-item>
+            <c-list-item display="flex" align-items="center">
+              <c-list-icon icon="check-circle" color="gray.500" mr="4" />
+              <c-text>
+                Loyalku menyajikan data dan gambaran umum berdasarkan data-data
+                tersebut
+              </c-text>
+            </c-list-item>
+            <c-list-item display="flex" align-items="center">
+              <c-list-icon icon="check-circle" color="gray.500" mr="4" />
+              <c-text>
+                Aplikasi Loyalku tidak pernah mengirimkan data apapun kemanapun
+              </c-text>
+            </c-list-item>
+            <c-list-item display="flex" align-items="center">
+              <c-list-icon icon="check-circle" color="gray.500" mr="4" />
+              <c-text>
+                Data transaksi yang Loyalku gunakan tidak pernah meninggalkan
+                perangkatmu
+              </c-text>
+            </c-list-item>
+          </c-list>
           <c-button
             variant-color="blue"
             size="md"
