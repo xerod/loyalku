@@ -25,6 +25,8 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
+    //https://github.com/nuxt-community/dotenv-module
+    '@nuxtjs/dotenv',
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
@@ -78,11 +80,9 @@ export default {
     plugins: ['~/plugins/auth.js'],
     strategies: {
       moka: {
-        clientId:
-          '7a49f9caa9daeeec623470b760a9d200caa065248be4a0be2722476f558bcb2f',
-        clientSecret:
-          '77fe02e532b7c4c035de97f83ab320a5725f6ce97d336244228f8366dc89fbb5',
-        redirectUri: 'https://loyalku.vercel.app/auth/callback',
+        clientId: process.env.CLIENT_ID,
+        clientSecret: process.env.CLIENT_SECRET,
+        redirectUri: process.env.REDIRECT_URI,
       },
     },
     redirect: {
