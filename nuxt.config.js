@@ -39,10 +39,18 @@ export default {
     '@nuxtjs/auth-next',
     // https://github.com/nuxt-community/dayjs-module
     '@nuxtjs/dayjs',
+    // https://github.com/nuxt-community/proxy-module#readme
+    '@nuxtjs/proxy',
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {},
+
+  proxy: {
+    '/api': {
+      target: 'https://api.mokapos.com/',
+    },
+  },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {},
