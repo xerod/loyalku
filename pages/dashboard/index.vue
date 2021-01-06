@@ -124,7 +124,10 @@ export default {
       })
 
       if (results.completed === false) {
-        return await getTransaction(results.next_url)
+        const url = new URL(results.next_url)
+        const next_url = '/api' + url.pathname + url.search
+
+        return await getTransaction(next_url)
       } else {
         return results.completed
       }
