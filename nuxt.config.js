@@ -50,7 +50,9 @@ export default {
 
   proxy: {
     '/api': {
-      target: 'https://api.mokapos.com/',
+      target: 'https://api.mokapos.com',
+      pathRewrite: { '^/api': '' },
+      ws: false,
     },
   },
 
@@ -80,7 +82,7 @@ export default {
           '7a49f9caa9daeeec623470b760a9d200caa065248be4a0be2722476f558bcb2f',
         clientSecret:
           '77fe02e532b7c4c035de97f83ab320a5725f6ce97d336244228f8366dc89fbb5',
-        redirectUri: 'https://loyalku.vercel.app/auth/callback',
+        redirectUri: 'http://localhost:3000/auth/callback',
       },
     },
     redirect: {
