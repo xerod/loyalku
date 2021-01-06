@@ -32,9 +32,7 @@ export const actions = {
     const outletId = this.$auth.user.outlet_ids[0]
 
     await this.$axios
-      .$get(
-        `https://api.mokapos.com/v2/outlets/${outletId}/reports/get_latest_transactions`
-      )
+      .$get(`/api/v2/outlets/${outletId}/reports/get_latest_transactions`)
       .then((res) => {
         commit('SET_LATEST_TRANSACTION', res.data)
       })
