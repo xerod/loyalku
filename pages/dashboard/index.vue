@@ -109,7 +109,7 @@ export default {
     }
     const outletId = this.$store.state.auth.user.outlet_ids[0]
 
-    const defaultEndpoint = `https://api.mokapos.com/v2/outlets/${outletId}/reports/get_latest_transactions`
+    const defaultEndpoint = `/api/v2/outlets/${outletId}/reports/get_latest_transactions`
     const actualEndpoint =
       defaultEndpoint +
       `?since=${defaultQuery.since}&until=${defaultQuery.until}`
