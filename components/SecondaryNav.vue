@@ -7,9 +7,30 @@
       justify="space-between"
       my="3"
     >
-      <c-text fontWeight="semibold" color="gray.600" fontSize="lg">
-        {{ name }}
-      </c-text>
+      <c-flex align-items="center">
+        <c-text fontWeight="semibold" color="gray.600" fontSize="lg">
+          {{ name }}
+        </c-text>
+
+        <c-spinner
+          v-if="isFetchingData"
+          size="3"
+          color="yellow.500"
+          emptyColor="yellow.200"
+          speed="0.8s"
+          ml="2"
+        />
+
+        <c-pseudo-box
+          v-else
+          as="div"
+          w="2"
+          h="2"
+          rounded="full"
+          bg="#50e3c2"
+          ml="2"
+        />
+      </c-flex>
       <c-button-group>
         <c-button
           right-icon="arrow-forward"
@@ -32,6 +53,9 @@ export default {
     name: {
       required: true,
       default: '',
+    },
+    isFetchingData: {
+      required: true,
     },
   },
   methods: {

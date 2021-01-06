@@ -1,6 +1,6 @@
 <template>
   <c-flex direction="column" width="80%" align="center">
-    <SecondaryNav name="Home" />
+    <SecondaryNav name="Home" :isFetchingData="isFetchingTransaction" />
     <c-alert
       v-if="!isTransactionContainCustomer"
       width="90%"
@@ -28,9 +28,9 @@
           >CUSTOMER RETENTION RATE</c-text
         >
         <c-flex align="flex-end">
-          <c-text fontSize="4xl" fontWeight="bold" color="gray.800">{{
-            getCustomerRetentionRate
-          }}</c-text>
+          <c-text fontSize="4xl" fontWeight="bold" color="gray.800"
+            >{{ getCustomerRetentionRate }}%</c-text
+          >
           <c-text color="green.500" ml="2">+0%</c-text>
         </c-flex>
       </c-box>
@@ -148,7 +148,7 @@ export default {
       return ratio
     },
     getCustomerRetentionRate() {
-      return this.customer_retention_rate
+      return this.customer_retention_rate.toFixed(2)
     },
     getMultiProductPurchaseRate() {
       const multiProductPurchase = Transaction.query()

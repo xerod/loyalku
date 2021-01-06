@@ -235,7 +235,7 @@
                   :max="100"
                   :min="0"
                   :step="0.1"
-                  precision="2"
+                  :precision="2"
                 >
                   <c-number-input-field />
                   <c-number-input-stepper>
