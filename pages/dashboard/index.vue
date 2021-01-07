@@ -29,7 +29,7 @@
         >
         <c-flex align="flex-end">
           <c-text fontSize="4xl" fontWeight="bold" color="gray.800"
-            >{{ getCustomerRetentionRate }}%</c-text
+            >{{ getRetentionRate }}%</c-text
           >
           <c-text color="green.500" ml="2">+0%</c-text>
         </c-flex>
@@ -70,17 +70,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
-import Transaction from '@/models/Transaction'
-import Customer from '@/models/Customer'
+import global from '@/mixins/global'
 
 import SecondaryNav from '@/components/SecondaryNav'
 import Transactions from '@/components/Transactions.vue'
 
 export default {
+  mixins: [global],
   data() {
     return {
-      isFetchingTransaction: true,
       selected: 1,
     }
   },
@@ -91,85 +89,7 @@ export default {
   created() {
     this.$store.dispatch('transactions/getLatestTransaction')
   },
-  async mounted() {
-    const now = this.$dayjs()
-    const sixMonthsFromNow = this.$dayjs.duration({
-      weeks: 3,
-      months: 5,
-    })
-    // const fromBeginning = await this.$axios
-    //   .$get('https://api.mokapos.com/v1/businesses')
-    //   .then((res) => {
-    //     return this.$dayjs(res.data.created_at)
-    //   })
-    const defaultQuery = {
-      since: now.subtract(sixMonthsFromNow).unix(),
-      // since: fromBeginning,
-      until: now.unix(),
-    }
-    const outletId = this.$store.state.auth.user.outlet_ids[0]
-
-    const defaultEndpoint = `/api/v2/outlets/${outletId}/reports/get_latest_transactions`
-    const actualEndpoint =
-      defaultEndpoint +
-      `?since=${defaultQuery.since}&until=${defaultQuery.until}`
-
-    const getTransaction = async (url) => {
-      var results = await this.$axios.$get(url).then((res) => {
-        return res.data
-      })
-
-      Transaction.insert({
-        data: results.payments,
-      })
-
-      if (results.completed === false) {
-        const url = new URL(results.next_url)
-        const next_url = '/api' + url.pathname + url.search
-
-        return await getTransaction(next_url)
-      } else {
-        return results.completed
-      }
-    }
-
-    ;(async () => {
-      if (Transaction.all().length == 0) {
-        const entireList = await getTransaction(actualEndpoint)
-      }
-      this.isFetchingTransaction = false
-    })()
-  },
   computed: {
-    getRepurchasingRate() {
-      const allCustomerWithTransactions = Customer.query()
-        .with('transactions')
-        .get().length
-      const allCustomers = Customer.all().length
-
-      const ratio = (allCustomerWithTransactions / allCustomers) * 100
-      return ratio
-    },
-    getCustomerRetentionRate() {
-      return this.customer_retention_rate.toFixed(2)
-    },
-    getMultiProductPurchaseRate() {
-      const multiProductPurchase = Transaction.query()
-        .where('checkouts', (value) => value.length > 1)
-        .get().length
-
-      const allTransaction = Transaction.all().length
-      const ratio = (multiProductPurchase / allTransaction) * 100
-
-      return ratio.toFixed(0)
-    },
-    isTransactionContainCustomer() {
-      const transactionContainCustomer = Transaction.query()
-        .where('customer_id', (value) => value !== null)
-        .get().length
-
-      return !!transactionContainCustomer
-    },
     ...mapGetters('transactions', {
       latest_transactions: 'GET_LATEST_TRANSACTION',
       customer_retention_rate: 'GET_CUSTOMER_RETENTION_RATE',

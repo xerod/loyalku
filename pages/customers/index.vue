@@ -1,6 +1,6 @@
 <template>
   <c-flex direction="column" width="80%" align="center">
-    <SecondaryNav name="Customers" />
+    <SecondaryNav name="Customers" :isFetchingData="isFetchingTransaction" />
     <c-flex direction="column" width="90%">
       <c-text fontWeight="semibold" color="gray.600" mb="2" mt="4">
         Retention Overview
@@ -276,92 +276,14 @@
 </template>
 
 <script>
-import Transaction from '@/models/Transaction'
+import global from '@/mixins/global'
+
 import SecondaryNav from '@/components/SecondaryNav'
 
 export default {
-  data() {
-    return {
-      isFetchingData: true,
-      operatingIncome: 0,
-    }
-  },
+  mixins: [global],
   components: {
     SecondaryNav,
-  },
-  computed: {
-    getCustomersAtBeginning() {
-      return Transaction.query()
-        .where(
-          'created_at',
-          (value) =>
-            this.$dayjs(value) < this.$dayjs().subtract(1, 'month') &&
-            this.$dayjs(value) > this.$dayjs().subtract(2, 'month')
-        )
-        .get().length
-    },
-    getCustomersGained() {
-      return Transaction.query()
-        .where(
-          'created_at',
-          (value) => this.$dayjs(value) > this.$dayjs().subtract(1, 'month')
-        )
-        .get().length
-    },
-    getCustomersAtTheEnd() {
-      return Transaction.all().length
-    },
-    getNewCustomersGrowth() {
-      return this.getCustomersGained
-    },
-    getNumberOfLostCustomers() {
-      const avarageCustomersRate =
-        (this.getCustomersAtTheEnd - this.getCustomersGained) / 5
-      const numberOfLOstCustomers =
-        this.getCustomersGained - avarageCustomersRate
-      return numberOfLOstCustomers.toFixed(0)
-    },
-    getAttritionRate() {
-      const avarageCustomersRate =
-        (this.getCustomersAtTheEnd - this.getCustomersGained) / 5
-      const attritionRate =
-        (this.getNumberOfLostCustomers / avarageCustomersRate) * 100
-      return attritionRate.toFixed(2)
-    },
-    getRetentionRate() {
-      const retentionRate = 100 - this.getAttritionRate
-      this.$store.commit(
-        'transactions/SET_CUSTOMER_RETENTION_RATE',
-        retentionRate
-      )
-      return retentionRate.toFixed(2)
-    },
-    getAvarageSalesPerCustomer() {
-      const allTransactionValue = Transaction.query().sum('total_collected')
-      const avarage = allTransactionValue / this.getCustomersAtTheEnd
-
-      return avarage
-    },
-    getLostOperatingIncome() {
-      const operatingIncomePerCustomer =
-        (this.getAvarageSalesPerCustomer * this.operatingIncome) / 100
-      const lostOperatingIncome =
-        operatingIncomePerCustomer * this.getNumberOfLostCustomers
-      return lostOperatingIncome
-    },
-    getLostRevenue() {
-      return this.getAvarageSalesPerCustomer * this.getNumberOfLostCustomers
-    },
-    formatter() {
-      const value = new Intl.NumberFormat('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        minimumFractionDigits: 0,
-        currencyDisplay: 'symbol',
-      })
-
-      return value
-    },
   },
 }
 </script>
