@@ -1,6 +1,6 @@
 export const state = () => ({
   latest_transaction: [],
-  customer_retention_rate: 0,
+  sales_summary: [],
 })
 
 export const mutations = {
@@ -10,11 +10,11 @@ export const mutations = {
   REMOVE_LATEST_TRANSACTION(state) {
     state.latest_transaction = []
   },
-  SET_CUSTOMER_RETENTION_RATE(state, payload) {
-    state.customer_retention_rate = payload
+  SET_SALES_SUMMARY(state, payload) {
+    state.sales_summary = payload
   },
-  REMOVE_CUSTOMER_RETENTION_RATE(state) {
-    state.customer_retention_rate = 0
+  REMOVE_SALES_SUMMARY(state) {
+    state.sales_summary = []
   },
 }
 
@@ -22,8 +22,8 @@ export const getters = {
   GET_LATEST_TRANSACTION: (state) => {
     return state.latest_transaction
   },
-  GET_CUSTOMER_RETENTION_RATE: (state) => {
-    return state.customer_retention_rate
+  GET_SALES_SUMMARY: (state) => {
+    return state.sales_summary
   },
 }
 

@@ -1,6 +1,10 @@
 <template>
   <c-flex direction="column" width="80%" align="center">
-    <SecondaryNav name="Home" :isFetchingData="isFetchingTransaction" />
+    <SecondaryNav
+      name="Home"
+      :isFetchingData="isFetchingTransaction"
+      :progressCompleted="getProgressCompleted"
+    />
     <c-alert
       v-if="!isTransactionContainCustomer"
       width="90%"
@@ -69,7 +73,6 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import global from '@/mixins/global'
 
 import SecondaryNav from '@/components/SecondaryNav'
@@ -88,12 +91,6 @@ export default {
   },
   created() {
     this.$store.dispatch('transactions/getLatestTransaction')
-  },
-  computed: {
-    ...mapGetters('transactions', {
-      latest_transactions: 'GET_LATEST_TRANSACTION',
-      customer_retention_rate: 'GET_CUSTOMER_RETENTION_RATE',
-    }),
   },
   methods: {
     select(i) {

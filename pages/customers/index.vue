@@ -1,6 +1,10 @@
 <template>
   <c-flex direction="column" width="80%" align="center">
-    <SecondaryNav name="Customers" :isFetchingData="isFetchingTransaction" />
+    <SecondaryNav
+      name="Customers"
+      :isFetchingData="isFetchingTransaction"
+      :progressCompleted="getProgressCompleted"
+    />
     <c-flex direction="column" width="90%">
       <c-text fontWeight="semibold" color="gray.600" mb="2" mt="4">
         Retention Overview
@@ -182,12 +186,7 @@
                 {{ formatter.format(getAvarageSalesPerCustomer) }}
               </td>
             </tr>
-            <tr
-              v-chakra
-              bg="gray.50"
-              border-bottom="1px"
-              border-color="gray.200"
-            >
+            <tr v-chakra bg="gray.50">
               <th v-chakra font-weight="bold" color="gray.600">
                 Lost revenue
                 <c-text
@@ -199,73 +198,8 @@
                   >Nilai pendapatan yang hilang selama 6 bulan terakhir</c-text
                 >
               </th>
-              <td
-                v-chakra
-                width="40%"
-                border-color="gray.100"
-                text-align="right"
-                py="8"
-              >
+              <td v-chakra width="40%" text-align="right" py="8">
                 {{ formatter.format(getLostRevenue) }}
-              </td>
-            </tr>
-            <tr>
-              <th v-chakra font-weight="medium">
-                Operating Income (%)
-                <c-text
-                  color="gray.400"
-                  font-weight="normal"
-                  font-size="sm"
-                  line-height="1.25"
-                  mt="1"
-                  >Didapat dari pendapatan kotor dikurangi pengeluaran
-                  operasional</c-text
-                >
-              </th>
-              <td
-                v-chakra
-                width="40%"
-                border-color="gray.100"
-                text-align="right"
-                py="8"
-                pl="12"
-              >
-                <c-number-input
-                  v-model="operatingIncome"
-                  :max="100"
-                  :min="0"
-                  :step="0.1"
-                  :precision="2"
-                >
-                  <c-number-input-field />
-                  <c-number-input-stepper>
-                    <c-number-increment-stepper />
-                    <c-number-decrement-stepper />
-                  </c-number-input-stepper>
-                </c-number-input>
-              </td>
-            </tr>
-            <tr v-chakra bg="gray.50">
-              <th v-chakra font-weight="bold" color="gray.600">
-                Lost Operating Income:
-                <c-text
-                  color="gray.400"
-                  font-weight="normal"
-                  font-size="sm"
-                  line-height="1.25"
-                  mt="1"
-                  >Nilai pendapatan operasional yang hilang selama 6 bulan
-                  terakhir</c-text
-                >
-              </th>
-              <td
-                v-chakra
-                width="40%"
-                border-color="gray.100"
-                text-align="right"
-                py="8"
-              >
-                {{ formatter.format(getLostOperatingIncome) }}
               </td>
             </tr>
           </table>

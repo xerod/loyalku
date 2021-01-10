@@ -43,6 +43,12 @@
         </c-button>
       </c-button-group>
     </c-flex>
+    <c-progress
+      v-if="isFetchingData"
+      color="vue"
+      height="3px"
+      :value="progressCompleted"
+    />
     <c-divider m="0" border-color="gray.300"></c-divider>
   </c-flex>
 </template>
@@ -55,6 +61,9 @@ export default {
       default: '',
     },
     isFetchingData: {
+      required: true,
+    },
+    progressCompleted: {
       required: true,
     },
   },

@@ -1,3 +1,5 @@
+import { mapGetters } from 'vuex'
+
 import Transaction from '@/models/Transaction'
 import Customer from '@/models/Customer'
 
@@ -7,6 +9,15 @@ export default {
       isFetchingTransaction: true,
       operatingIncome: 0,
     }
+  },
+  async created() {
+    const outletId = this.$store.state.auth.user.outlet_ids[0]
+    const url = `/api/v2/outlets/${outletId}/reports/sales_summary`
+    const response = await this.$axios.$get(url).then((res) => {
+      return res.data
+    })
+
+    this.$store.commit('transactions/SET_SALES_SUMMARY', response)
   },
   mounted() {
     const now = this.$dayjs()
@@ -124,10 +135,7 @@ export default {
     },
     getRetentionRate() {
       const retentionRate = 100 - this.getAttritionRate
-      this.$store.commit(
-        'transactions/SET_CUSTOMER_RETENTION_RATE',
-        retentionRate
-      )
+
       return retentionRate.toFixed(2)
     },
     getAvarageSalesPerCustomer() {
@@ -156,5 +164,16 @@ export default {
 
       return value
     },
+    getProgressCompleted() {
+      const exactTransaction = this.sales_summary.number_of_transactions
+      const transactionFetched = Transaction.all().length
+
+      const progress = (transactionFetched / exactTransaction) * 100
+      return progress
+    },
+    ...mapGetters('transactions', {
+      latest_transactions: 'GET_LATEST_TRANSACTION',
+      sales_summary: 'GET_SALES_SUMMARY',
+    }),
   },
 }
